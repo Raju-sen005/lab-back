@@ -26,22 +26,20 @@ app.post("/api/book-test", async (req, res) => {
     const { name, mobile, city } = req.body;
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      secure: false,
 
       auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
-
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
     });
 
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: process.env.SMTP_USER,
 
-      to: process.env.EMAIL,
+      to: process.env.SMTP_USER,
 
       subject: `New Lab Test Booking - ${name}`,
 
