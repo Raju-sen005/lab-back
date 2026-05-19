@@ -7,10 +7,13 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
 app.use(express.json());
-
-
 
 app.get("/", (req, res) => {
   res.send("Lab Backend Running...");
@@ -18,15 +21,25 @@ app.get("/", (req, res) => {
 
 app.post("/api/book-test", async (req, res) => {
   try {
-    const { name, mobile, city, test, collectionType } = req.body;
+    console.log("BODY =>", req.body);
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
-      },
-    });
+    const { name, mobile, city } = req.body;
+
+    const transporter =
+      nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+        },
+      });
+
+    await transporter.verify();
+
+    console.log("SMTP READY");
 
     const mailOptions = {
       from: process.env.EMAIL,
@@ -45,8 +58,6 @@ app.post("/api/book-test", async (req, res) => {
           overflow:hidden;
         ">
 
-          <!-- HEADER -->
-
           <div style="
             background:linear-gradient(to right,#14b8a6,#06b6d4);
             padding:25px;
@@ -61,8 +72,6 @@ app.post("/api/book-test", async (req, res) => {
               LabCare Appointment Notification
             </p>
           </div>
-
-          <!-- BODY -->
 
           <div style="padding:30px;background:#ffffff;">
 
@@ -122,12 +131,8 @@ app.post("/api/book-test", async (req, res) => {
                 </td>
               </tr>
 
-           
-
             </table>
           </div>
-
-          <!-- FOOTER -->
 
           <div style="
             background:#0f172a;
@@ -142,18 +147,21 @@ app.post("/api/book-test", async (req, res) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    const info =
+      await transporter.sendMail(mailOptions);
+
+    console.log("MAIL SENT =>", info);
 
     res.status(200).json({
       success: true,
       message: "Booking submitted successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.log("MAIL ERROR =>", error);
 
     res.status(500).json({
       success: false,
-      message: "Something went wrong",
+      message: error.message,
     });
   }
 });
