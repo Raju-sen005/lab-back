@@ -32,8 +32,11 @@ app.post("/api/book-test", async (req, res) => {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,
       },
-    });
 
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+    });
 
     const mailOptions = {
       from: process.env.EMAIL,
