@@ -45,9 +45,9 @@ app.post("/api/book-test", async (req, res) => {
     });
 
     const mailOptions = {
-      from: process.env.SMTP_USER,
+      from: "sensaab0005@gmail.com",
 
-      to: process.env.SMTP_USER,
+      to: "sensaab0005@gmail.com",
 
       subject: `New Lab Test Booking - ${name}`,
 
