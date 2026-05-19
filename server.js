@@ -10,7 +10,7 @@ const app = express();
 app.use(
   cors({
     origin: "*",
-  })
+  }),
 );
 
 app.use(express.json());
@@ -25,17 +25,15 @@ app.post("/api/book-test", async (req, res) => {
 
     const { name, mobile, city } = req.body;
 
-    const transporter =
-      nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASSWORD,
-        },
-      });
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+      },
+    });
 
     await transporter.verify();
 
@@ -147,8 +145,7 @@ app.post("/api/book-test", async (req, res) => {
       `,
     };
 
-    const info =
-      await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
 
     console.log("MAIL SENT =>", info);
 
