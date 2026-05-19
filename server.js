@@ -34,9 +34,6 @@ app.post("/api/book-test", async (req, res) => {
       },
     });
 
-    await transporter.verify();
-
-    console.log("SMTP READY");
 
     const mailOptions = {
       from: process.env.EMAIL,
